@@ -1,0 +1,8 @@
+# backend/requirements.txt
+fastapi
+uvicorn[standard]
+psycopg2-binary
+python-dotenv
+python-multipart
+prisma
+llama-cpp-python
