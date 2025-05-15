@@ -1,0 +1,93 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model topic_count {
+  id    String @id @default(cuid()) @db.VarChar(255)
+  topic String @unique(map: "topic") @db.VarChar(255)
+  count Int
+}
+
+model account {
+  id                String  @id @default(cuid()) @db.VarChar(255)
+  userId            String  @db.VarChar(255)
+  type              String  @db.VarChar(255)
+  provider          String  @db.VarChar(255)
+  providerAccountId String  @db.VarChar(255)
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String? @db.VarChar(255)
+  scope             String? @db.VarChar(255)
+  id_token          String? @db.Text
+  session_state     String? @db.VarChar(255)
+  user              user    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId], map: "Account_provider_providerAccountId_key")
+  @@index([userId], map: "Account_userId_idx")
+}
+
+model game {
+  id          String        @id @default(cuid()) @db.VarChar(255)
+  userId      String        @db.VarChar(255)
+  timeStarted DateTime      @db.DateTime(0)
+  topic       String        @db.VarChar(255)
+  timeEnded   DateTime?     @db.DateTime(0)
+  gameType    game_gameType
+  user        user          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  questions   question[]
+
+  @@index([userId], map: "Game_userId_idx")
+}
+
+model question {
+  id                String                @id @default(cuid()) @db.VarChar(255)
+  question          String                @db.Text
+  answer            String                @db.Text
+  gameId            String                @db.VarChar(255)
+  options           Json?
+  percentageCorrect Float?                @db.Float
+  isCorrect         Boolean?
+  questionType      question_questionType
+  userAnswer        String?               @db.Text
+  game              game                  @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@index([gameId], map: "Question_gameId_idx")
+}
+
+model session {
+  id           String   @id @default(cuid()) @db.VarChar(255)
+  sessionToken String   @unique(map: "Session_sessionToken_key") @db.VarChar(255)
+  userId       String   @db.VarChar(255)
+  expires      DateTime @db.DateTime(0)
+  user         user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId], map: "Session_userId_idx")
+}
+
+model user {
+  id            String    @id @default(cuid()) @db.VarChar(255)
+  name          String?   @db.VarChar(255)
+  email         String?   @unique(map: "User_email_key") @db.VarChar(255)
+  emailVerified DateTime? @db.DateTime(0)
+  image         String?   @db.VarChar(255)
+  accounts      account[]
+  sessions      session[]
+  games         game[]
+}
+
+enum game_gameType {
+  mcq
+  open_ended
+}
+
+enum question_questionType {
+  mcq
+  open_ended
+}
