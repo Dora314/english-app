@@ -5,8 +5,8 @@ npm install
 # Add .env
 API_URL="http://localhost:3000"<br>
 NODE_ENV="development"<br>
-GEMINI_API_KEY=(get from ai.studio.google.com)<br>
-NEXTAUTH_SECRET="au70ZP4cihkIakmRLnGYAP80rWebdcI2nFKTrGHpbm4="<br>
+GEMINI_API_KEY="get_in_aistudio"<br>
+NEXTAUTH_SECRET="random_secret_key_here"<br>
 NEXTAUTH_URL="http://localhost:3000"<br>
 GOOGLE_CLIENT_ID="(get from google console Oauth2 client it and add http://localhost:3000/api/auth/callback/google to authorize redirect urls)"<br>
 GOOGLE_CLIENT_SECRET="(get from google console Oauth2 client secret)"<br>
